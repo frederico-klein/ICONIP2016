@@ -1,23 +1,8 @@
 function gwr(data,MAXNUMBEROFNODES)
 
-#################################################
-#cf parisi, 2015 and cf marsland, 2002
-#based on the GNG algorithm from the guy that did the GNG algorithm for
-#matlab
-
-# some tiny differences:
-# in the 2002 paper, they want to show the learning of topologies ability
-# of the GWR algorithm, which is not our main goal. In this sense they have
-# a function that can generate new points as pleased p(eta). This is not
-# our case, we will just go through our data sequentially
-
-# I am not taking time into account. the h(time) function is therefore
-# something that yields a constant value
-
 #the initial parameters for the algorithm:
 global maxnodes, at, en, eb, h0, ab, an, tb, tn, amax, A, C
-#########################################################################
-#########################################################################
+
 maxnodes = MAXNUMBEROFNODES; #maximum number of nodes/neurons in the gas
 at = 0.95; #activity threshold
 en = 0.006; #epsilon subscript n
@@ -28,14 +13,11 @@ an = 0.95;
 tb = 3.33;
 tn = 3.33;
 amax = 50; #greatest allowed age
-#########################################################################
-#########################################################################
-t0 = time(); # my algorithm is not necessarily static!
+
+t0 = time(); 
 STATIC = true;
 RANDOMSTART = true;
 DOOVER = 1;	
-################### ATTENTION STILL MISSING FIRING RATE! will have problems
-################### when algorithm not static!!!!
 
 #test some algorithm conditions:
 if !(0 < en || en < eb || eb < 1)
@@ -60,11 +42,11 @@ A = zeros(size(n1,1),maxnodes);
 # (2)
 # initialize empty set C
 
-C = spzeros(maxnodes,maxnodes); # this is a zeros sparse matrix julia style (the connection matrix).
+C = spzeros(maxnodes,maxnodes);
 C_age = C;
 
-r = 3; #the first point to be added is the point 3 because we already have n1 and n2
-h = zeros(1,maxnodes);#firing counter matrix
+r = 3; 
+h = zeros(1,maxnodes);
 datasetsize = size(data,2);
 
 #some variables to display the graphs
@@ -92,9 +74,7 @@ for k = 1:datasetsize #step 1
         C_age = spdi_del(C_age,s,t);
     end
     a = exp(-norm(eta-ws)); #step 5
-    
-    #algorithm has some issues, so here I will calculate the neighbours of
-    #s
+   
     neighbours = findneighbours(s, C);
 
     num_of_neighbours = size(neighbours,1);
@@ -112,7 +92,7 @@ for k = 1:datasetsize #step 1
             wi = A[:,i];
             A[:,i] = wi + en*h[i]*(eta-wi);
         end
-        A[:,s] = ws + eb*h[s]*(eta-ws); #adjusts nearest point MORE;;; also, I need to adjust this after the for loop or the for loop would reset this!!!
+        A[:,s] = ws + eb*h[s]*(eta-ws); 
     end
     #step 8 : age edges with end at s
     #first we need to find if the edges connect to s
@@ -128,16 +108,14 @@ for k = 1:datasetsize #step 1
         h = hizero;
         h[s] = hszero;
     else
-        for i = 1:r ### since this value is the same for all I can compute it once and then make all the array have the same value...
-            h[i] = hi(time); #ok, is this sloppy or what? t for the second nearest point and t for time
+        for i = 1:r 
+            h[i] = hi(time); 
         end
         h[s] = hs(timetime);
         timetime = (time - t0)*1; 
     end    
    
     #step 10: check if a node has no edges and delete them
-    #[C, A, C_age, h, r ] = removenode(C, A, C_age, h, r); 
-    #check for old edges
     if r>2 # don't remove everything
         C, C_age  = removeedge(C, C_age);  
         C, A, C_age, h, r  = removenode(C, A, C_age, h, r);  #inverted order as it says on the algorithm to remove points faster
@@ -150,19 +128,19 @@ end
 return A,C,ni1,ni2 
 end
 
-function spdi_add(sparsemat, a, b) #increases the number so that I don't have to type this all the time and forget it...
+function spdi_add(sparsemat, a, b) #increases the number 
 sparsemat[a,b] = sparsemat[a,b] + 1; 
 sparsemat[b,a] = sparsemat[a,b] + 1;
 return sparsemat
 end
 
-function spdi_bind(sparsemat, a, b) # adds a 2 way connection, so that I don't have to type this all the time and forget it...
+function spdi_bind(sparsemat, a, b) # adds a 2 way connection
 sparsemat[a,b] = 1; 
 sparsemat[b,a] = 1;
 return sparsemat
 end
 
-function spdi_del(sparsemat, a, b) # removes a 2 way connection, so that I don't have to type this all the time and forget it...
+function spdi_del(sparsemat, a, b) # removes a 2 way connection
 sparsemat[a,b] = 0;
 sparsemat[b,a] = 0;
 return sparsemat
