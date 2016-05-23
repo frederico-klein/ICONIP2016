@@ -1,4 +1,4 @@
-function simvar = starter_script()
+function simvar = starter_fun()
 global VERBOSE LOGIT TEST
 VERBOSE = true;
 LOGIT = true;
