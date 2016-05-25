@@ -63,7 +63,7 @@ else
 end
 OldA = A;
 # start of the loop
-for aaaaa = 1:DOOVER
+for epochscounter = 1:DOOVER
 for k = 1:datasetsize #step 1
 	#global A
         eta = data[:,k]; # this the k-th data sample
@@ -146,8 +146,7 @@ sparsemat[b,a] = 0;
 return sparsemat
 
 end
-#some of the functions definitions used to say this is biologically
-#plausible...
+
 function S(t)
     X = 1;
 return X
