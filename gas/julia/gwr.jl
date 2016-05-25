@@ -144,7 +144,6 @@ function spdi_del(sparsemat, a, b) # removes a 2 way connection
 sparsemat[a,b] = 0;
 sparsemat[b,a] = 0;
 return sparsemat
-
 end
 
 function S(t)
