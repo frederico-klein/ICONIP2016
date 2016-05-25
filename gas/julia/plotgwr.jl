@@ -43,7 +43,6 @@ elseif size(A,1) == 75||size(A,1) == 72
     end
     #q = size(squeeze(tdskel(1,:,row)),2);
     
-    #quattro = cat(4, tdskel(:,:,row),tdskel(:,:,col));
     moresticks = [];
     
     #moresticks = zeros(3,3*size(row));
