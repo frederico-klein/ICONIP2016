@@ -1,4 +1,3 @@
-%%%start script
 load('Shapes.mat')
 %Data = simplecluster_dataset;
 %pkg load image %statistics
@@ -29,29 +28,9 @@ params.tb = 3.33;
 params.tn = 3.33;
 
 %%%Exclusive for gng
-% params.lambda                   = 3;
-% params.alpha                    = .5;     % q and f units error reduction constant.
-% params.d                           = .99;   % Error reduction factor.
-% 
-% 
-% 
-tic
-A = gas_wrapper(Data,params,'gwr');
-if params.PLOTIT
-    subplot(1,2,1)
-    hold on
-    %scatter(Data(1,:), Data(2,:),[],ColorLabels,'filled')
-    %scatter( A(1,:)', A(2,:)', 'r','filled')
-end
-plot(Data(1,:),Data(2,:), '.g', A(1,:)', A(2,:)', '.r')
+params.age_inc                  = 1;
+params.lambda                   = 3;
+params.alpha                    = .5;     % q and f units error reduction constant.
+params.d                           = .99;   % Error reduction factor.
 
-if exist('T', 'var') % if there is a target try to classify it
-%%% simple labeller:
-nodes_Y = simplelabeller(A, Data, T);
-Y = simplelabeller(Data, A, nodes_Y);
-
-figure
-plotconfusion(T, Y);
-end
-toc
-
+startergasfun(Data, params, 'gwr', T, ColorLabels);
